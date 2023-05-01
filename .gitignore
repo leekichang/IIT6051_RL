@@ -2,7 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
-HW3/
+HW3/saved_weights/
+HW3/images/
 # C extensions
 *.so
 
