@@ -6,13 +6,21 @@ class CartPole:
         if is_show:
             self.env = gym.make('CartPole-v1', render_mode = 'human')
         else:
-            self.env = gym.make('CartPole-v1')
-
+            self.env = gym.make('CartPole-v1', render_mode = None)
+        
+        self.actions = [0, 1]
+        '''
+        0: Push cart to the left
+        1: Push cart to the right
+        '''
+    
+        
 if __name__ == '__main__':
     CP = CartPole(is_show=True)
     CP.env.reset()
-    while True:
-        pass
+    
+    
+    
 # import gym
 # import numpy as np
 
