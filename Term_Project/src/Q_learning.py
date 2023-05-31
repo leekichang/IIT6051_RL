@@ -17,7 +17,8 @@ class QL:
             self.env = gym.make('CartPole-v1', render_mode = 'human')
         else:
             self.env = gym.make('CartPole-v1', render_mode = None)
-            
+        
+        self.path = './saved_weights'    
         self.STATE_BOUNDS = list(zip(self.env.observation_space.low,\
                                      self.env.observation_space.high))
         self.STATE_BOUNDS[1] = [-0.5, 0.5]
@@ -106,12 +107,41 @@ class QL:
 
             explore_rate  = self.get_explore_rate(episode)
             learning_rate = self.get_learning_rate(episode)
+            if (episode+1) % 100 == 0:
+                self.save_q_table(episode)
+                print(f'Episode {episode+1} saved!')
+                
+    def save_q_table(self, episode):
+        import os
+        os.makedirs(self.path, exist_ok=True)
+        np.save(f'{self.path}/q_table_{episode+1}.npy', self.q_table)
     
-    def infer(self):
-        #TODO: Implement inference/visualization
-        pass
-            
+    def infer(self, episode):
+        self.q_table = np.load(f'{self.path}/q_table_{episode}.npy')
+        for _ in range(5):
+            obv     = self.env.reset()
+            state_0 = self.state_to_bucket(obv[0])
+            for t in tqdm(range(self.MAX_T)):
+                #self.env.render()
+                action = self.select_action(state_0, 0)
+                obv, reward, done, _, _ = self.env.step(action)
+
+                state = self.state_to_bucket(obv)
+
+                state_0 = state
+
+                if done:
+                    print("Episode %d finished after %f time steps" % (episode, t))
+                    if (t >= self.SOLVED_T):
+                        num_streaks += 1
+                    else:
+                        num_streaks = 0
+                    break
+
+    
 if __name__ == '__main__':
-    ql = QL()
-    ql.fit()
+    # ql = QL(is_show=False)
+    # ql.fit()
+    ql = QL(is_show=True)
+    ql.infer(1000)
     
