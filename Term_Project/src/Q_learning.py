@@ -3,7 +3,7 @@ import math
 import random
 import numpy as np
 from tqdm import tqdm
-
+from CartPole import *
 """ 
 Implementation reference:
 https://arxiv.org/abs/2006.04938
@@ -11,14 +11,10 @@ https://arxiv.org/abs/2006.04938
 
 random.seed(2022314416)
   
-class QL:
+class QL(CartPole):
     def __init__(self, is_show=False):
-        if is_show:
-            self.env = gym.make('CartPole-v1', render_mode = 'human')
-        else:
-            self.env = gym.make('CartPole-v1', render_mode = None)
-        
-        self.path = './saved_weights'    
+        super().__init__(is_show)
+        self.path = './saved_weights'
         self.STATE_BOUNDS = list(zip(self.env.observation_space.low,\
                                      self.env.observation_space.high))
         self.STATE_BOUNDS[1] = [-0.5, 0.5]
@@ -33,7 +29,7 @@ class QL:
 
         self.NUM_EPISODES = 1000
         self.MAX_T = 250
-        self.STREAK_TO_END = 120
+        self.STREAK_TO_END = 100
         self.SOLVED_T = 199
         
     def state_to_bucket(self, state):
@@ -44,7 +40,6 @@ class QL:
             elif state[i] >= self.STATE_BOUNDS[i][1]:
                 bucket_index = self.NUM_BUCKETS[i] - 1
             else:
-                # Mapping the state bounds to the bucket array
                 bound_width = self.STATE_BOUNDS[i][1] - self.STATE_BOUNDS[i][0]
                 offset = (self.NUM_BUCKETS[i]-1)*self.STATE_BOUNDS[i][0]/bound_width
                 scaling = (self.NUM_BUCKETS[i]-1)/bound_width
@@ -84,7 +79,6 @@ class QL:
             state_0 = self.state_to_bucket(obv[0])
 
             for t in range(self.MAX_T):
-                #self.env.render()
                 action = self.select_action(state_0, explore_rate)
                 obv, reward, done, _, _ = self.env.step(action)
 
@@ -96,7 +90,7 @@ class QL:
                 state_0 = state
 
                 if done:
-                    print("Episode %d finished after %f time steps" % (episode, t))
+                    print(f"Episode {episode} finished after {t} time steps")
                     if (t >= self.SOLVED_T):
                         num_streaks += 1
                     else:
@@ -118,7 +112,8 @@ class QL:
     
     def infer(self, episode):
         self.q_table = np.load(f'{self.path}/q_table_{episode}.npy')
-        for _ in range(5):
+        print(f"Infer with {episode} Episode Q table")
+        for _ in range(1):
             obv     = self.env.reset()
             state_0 = self.state_to_bucket(obv[0])
             for t in tqdm(range(self.MAX_T)):
@@ -131,7 +126,7 @@ class QL:
                 state_0 = state
 
                 if done:
-                    print("Episode %d finished after %f time steps" % (episode, t))
+                    print(f"Episode {episode} finished after {t} time steps")
                     if (t >= self.SOLVED_T):
                         num_streaks += 1
                     else:
@@ -140,8 +135,8 @@ class QL:
 
     
 if __name__ == '__main__':
-    # ql = QL(is_show=False)
-    # ql.fit()
+    ql = QL(is_show=False)
+    ql.fit()
     ql = QL(is_show=True)
     ql.infer(1000)
     

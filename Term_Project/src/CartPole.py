@@ -1,4 +1,4 @@
-import gymnasium as gym
+import gym
 
 class CartPole:
     def __init__(self, is_show=False):
@@ -7,12 +7,6 @@ class CartPole:
             self.env = gym.make('CartPole-v1', render_mode = 'human')
         else:
             self.env = gym.make('CartPole-v1', render_mode = None)
-        
-        self.actions = [0, 1]
-        '''
-        0: Push cart to the left
-        1: Push cart to the right
-        '''
     
         
 if __name__ == '__main__':
