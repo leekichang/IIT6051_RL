@@ -1,7 +1,9 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
+    os.makedirs('./figures', exist_ok=True)
     models = ['q_learning', 'REINFORCE', 'DQN']
     #### BEST RESULT ####
     FIGSIZE=(6,3)
