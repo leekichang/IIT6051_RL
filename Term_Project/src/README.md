@@ -10,13 +10,18 @@ Term project codes. Addressing Cart Pole Problem in OpenAI gym libarary.
 
 ## Commands
 ### Q learning
+```
 python Q_learning.py
-
+```
 ### Deep Q-Network
+```
 python DQN.py
-
+```
 ### REINFORCE Algorithm
+```
 python PGM.py
-
+```
 ### Experiments
+```
 python plot.py
+```
