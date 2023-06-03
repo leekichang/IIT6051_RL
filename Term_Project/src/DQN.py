@@ -189,30 +189,19 @@ class DQN(CartPole):
         os.makedirs(save_path, exist_ok=True)
         torch.save(self.agent.model.state_dict(), f'{save_path}/DQN_{str(datetime.now().strftime("%Y_%m_%d_%H_%M_%S"))}_{episode}episode.pth')
 if __name__ == "__main__":
-    mem_sizes = [12, 24, 36, 48, 60]
     fig = plt.figure(figsize=(6,3))
-    for mem_size in mem_sizes:
-        dqn = DQN(hidden_size=mem_size)
+    elapsed_times = []
+    for i in range(10):
+        dqn = DQN()
+        start = time.process_time()
         r, mr = dqn.explore()
-        np.save(f'./results/DQN_hidden_{mem_size}.npy', np.array(r))
-        np.save(f'./results/DQN_mean_hidden_{mem_size}', np.array(mr))
-        plt.plot(r, label=f'{mem_size}')
-        plt.plot(mr, label=f'{mem_size}_avg')
-    plt.savefig('./figures/hidden.png')
+        end = time.process_time()
+        elapsed_times.append(end-start)
+        np.save(f'./results/DQN_{i}.npy', np.array(r))
+        np.save(f'./results/DQN_mean_{i}.npy', np.array(mr))
+        
+    np.save('./results/DQN_time.npy', np.array(elapsed_times))
+    plt.plot(r)
+    plt.plot(mr)
     plt.show()
-        
-    # elapsed_times = []
-    # for i in range(10):
-    #     dqn = DQN()
-    #     start = time.process_time()
-    #     r, mr = dqn.explore()
-    #     end = time.process_time()
-    #     elapsed_times.append(end-start)
-    #     np.save(f'./results/DQN_{i}.npy', np.array(r))
-    #     np.save(f'./results/DQN_mean_{i}.npy', np.array(mr))
-        
-    # np.save('./results/DQN_time.npy', np.array(elapsed_times))
-    # plt.plot(r)
-    # plt.plot(mr)
-    # plt.show()
     #dqn.infer()

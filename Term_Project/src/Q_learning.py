@@ -110,6 +110,7 @@ class QL(CartPole):
             scores.append(score)
             mean_scores.append(np.mean(scores[-N_TRIALS:]))
         return scores, mean_scores
+    
     def save_q_table(self, episode):
         import os
         os.makedirs(self.path, exist_ok=True)
