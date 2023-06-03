@@ -1,6 +1,6 @@
 # Term Project
 
-Term project codes. Addressing Cart Pole Problem in OpenAI gym libarary.
+Term project codes. Addressing Cart Pole Problem in OpenAI gym library.
 
 ## Requirements
 - PyTorch: 2.0.0+cu118
